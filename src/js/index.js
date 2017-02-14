@@ -4,7 +4,7 @@ var globalStyle = require("../style/globalStyle.css");
 const app = document.getElementById("app");
 
 
-app.innerHTML = `<div class="${globalStyle.bordered}">` + button.domElement + "</div>";
+app.innerHTML = button.domElement;
 button.onClick((ev) => {
     console.log("I've been clicked");
 });

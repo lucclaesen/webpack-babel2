@@ -214,7 +214,19 @@ webpack.config.js:
     to it.
 
 - Step 9: make the dist folder self contained -- i.e. make it deployable. The problem is the index.html file, which lives
-outside of the dist folder by now.
+outside of the dist folder until now. What we'll be aiming for is that a index-template html file will live in the source dir.
+Webpack itself will emit the final html file, injecting the stylesheet link and the script reference to the bundle.
  * npm install --save-dev html-webpack-plugin
- * create a template html file under the src dir without script (or link) tags
- * in webpack.config.js
+ * in the src folder, create a template html file under the src dir without script (or link) tag; delete the index.html
+ * in webpack.config.js, configure the plugin to take the template html
+ * change the ouput.publicpath to '/'.
+    - in dev mode, this will have the effect that index.html, bundle.js, style.css and the sourcemaps will all be served from
+        memory from within the base url
+    - in prod mode, these files will be placed in dist, which will contain all the static assets, ready for deployment. In
+     order to test this package, create an npm script that uses http-server to serve everything in the dist folder:
+        "run-prod": "http-server -p 3000 ./dist"
+
+- Step 10: optimize for production.
+    1. One very simple optimization is to make sure that all assets have names with hashes computed on their contents. This
+    allows the browser to cache the resources and make network calls when their contents change. All plugins support this out of the box.
+    - css.

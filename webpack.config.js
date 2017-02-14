@@ -20,14 +20,16 @@ var plugins = (DEVELOPMENT)
     ? [
         new webpack.HotModuleReplacementPlugin()
     ]
-    : [];
-    // : [
-    //       new HtmlPlugin({
-    //         template : "./src/index-template.html"
-    //     })
-    // ];
+    : [
+        // new webpack.optimize.UglifyJsPlugin()
+    ];
 
-plugins.push(new ExtractTextPlugin("style.css"));
+
+var stylesheetName = DEVELOPMENT ? "style.css" : "style-[hash:10].css";
+var bundleName = DEVELOPMENT ? "bundle.js" : "bundle-[hash:10].js"
+
+
+plugins.push(new ExtractTextPlugin(stylesheetName));
 plugins.push(new HtmlPlugin({
             template : "./src/index-template.html"
         }));
@@ -39,7 +41,7 @@ module.exports = {
     output: {
         path: path.join(__dirname, 'dist'),
         publicPath: '/', 
-        filename: 'bundle.js'
+        filename: bundleName
     },
     module: {
         loaders: [
