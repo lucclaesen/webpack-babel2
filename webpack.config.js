@@ -20,14 +20,17 @@ var plugins = (DEVELOPMENT)
     ? [
         new webpack.HotModuleReplacementPlugin()
     ]
-    : [
-          new HtmlPlugin({
-            template : "./src/index-template.html"
-        })
-    ];
+    : [];
+    // : [
+    //       new HtmlPlugin({
+    //         template : "./src/index-template.html"
+    //     })
+    // ];
 
 plugins.push(new ExtractTextPlugin("style.css"));
-
+plugins.push(new HtmlPlugin({
+            template : "./src/index-template.html"
+        }));
 
 module.exports = {
     entry: entries,
@@ -35,7 +38,7 @@ module.exports = {
     devtool : 'source-map',
     output: {
         path: path.join(__dirname, 'dist'),
-        publicPath: DEVELOPMENT ?  '/dist/' : './', 
+        publicPath: '/', 
         filename: 'bundle.js'
     },
     module: {
