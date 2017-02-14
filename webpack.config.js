@@ -1,6 +1,8 @@
 var path = require("path");
 var webpack = require("webpack");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var HtmlPlugin = require("html-webpack-plugin");
+
 
 const DEVELOPMENT = process.env.NODE_ENV === 'development';
 
@@ -18,9 +20,14 @@ var plugins = (DEVELOPMENT)
     ? [
         new webpack.HotModuleReplacementPlugin()
     ]
-    : [];
+    : [
+          new HtmlPlugin({
+            template : "./src/index-template.html"
+        })
+    ];
 
 plugins.push(new ExtractTextPlugin("style.css"));
+
 
 module.exports = {
     entry: entries,
@@ -28,7 +35,7 @@ module.exports = {
     devtool : 'source-map',
     output: {
         path: path.join(__dirname, 'dist'),
-        publicPath: '/dist/', 
+        publicPath: DEVELOPMENT ?  '/dist/' : './', 
         filename: 'bundle.js'
     },
     module: {
@@ -37,14 +44,7 @@ module.exports = {
                 test: /\.js$/,
                 loaders: ['babel-loader'],
                 exclude: '/node_modules/'
-            },
-                // {
-                //     test: /\.css$/,
-                //     loaders: ExtractTextPlugin.extract({
-                //             loader: 'css-loader'
-                //         }),
-                //     exclude: '/node_modules/'
-                // }
+            }
         ],
         rules: [
             {

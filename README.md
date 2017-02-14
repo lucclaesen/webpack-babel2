@@ -191,19 +191,27 @@ webpack.config.js:
 - Step 7: enabling source maps: just add  devtool : 'source-map' to webpack.config
 
 - Step 8: add styling via dependencies. 
-    * Install 2 plugins:
+    * Install 2 loaders and a plugins:
         . css-loader: interprets css to js, such that styles can be required from within js files. Also, supports a ":local()"
             function that makes style elements available to js code (properties of the style object)
-        . style-loader: generates a style-tag in the html head with output of the css-loader
+        . style-loader: generates an inline style-tag in the html head with output of the css-loader.
+        . extract-text-webpack-plugin: creates a single css output bundle that can be linked to by the html. This has the
+        advantage that css and html load in parallel.  
 
-    * webpack configuration: define a loader for css files using both:
-            {
-                test: /\.css$/,
-                loaders: ['style-loader', 'css-loader'],
-                exclude: '/node_modules/'
-            }
-        Note that this setup (with the defaults for css loader) is optimized for production since it outputs local style
-        elements with hashes: every change in the element -> new element name
+    * webpack configuration: 
+        - initialize the extract text plugin for all environments: plugins.push(new ExtractTextPlugin("style.css"));
+        -  add a rule for css files that pipes the css-loader to the extract text plugin
+            rules: [
+                {
+                    test: /\.css$/,
+                    use: ExtractTextPlugin.extract({
+                        fallback: "style-loader",
+                        use: "css-loader"
+                    })
+                }
+            ]
+    * The effect of all this, is that a style.css is now generated in the dist folder. Make sure that index.html links
+    to it.
 
 - Step 9: make the dist folder self contained -- i.e. make it deployable. The problem is the index.html file, which lives
 outside of the dist folder by now.
