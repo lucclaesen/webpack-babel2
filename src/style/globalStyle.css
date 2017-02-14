@@ -1,0 +1,7 @@
+body {
+    background-color: blue;
+}
+
+:local(.bordered) {
+    border: solid black 1px;
+}

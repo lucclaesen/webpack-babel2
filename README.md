@@ -190,7 +190,20 @@ webpack.config.js:
        
 - Step 7: enabling source maps: just add  devtool : 'source-map' to webpack.config
 
-- Step 8: styling -- we're gonna skip this part. 
+- Step 8: add styling via dependencies. 
+    * Install 2 plugins:
+        . css-loader: interprets css to js, such that styles can be required from within js files. Also, supports a ":local()"
+            function that makes style elements available to js code (properties of the style object)
+        . style-loader: generates a style-tag in the html head with output of the css-loader
+
+    * webpack configuration: define a loader for css files using both:
+            {
+                test: /\.css$/,
+                loaders: ['style-loader', 'css-loader'],
+                exclude: '/node_modules/'
+            }
+        Note that this setup (with the defaults for css loader) is optimized for production since it outputs local style
+        elements with hashes: every change in the element -> new element name
 
 - Step 9: make the dist folder self contained -- i.e. make it deployable. The problem is the index.html file, which lives
 outside of the dist folder by now.
